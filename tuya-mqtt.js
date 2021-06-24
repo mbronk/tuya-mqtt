@@ -108,9 +108,9 @@ const main = async() => {
     }
 
     let will_topic = CONFIG.topic + 'script_status'
-    if(configDevices.length == 1 ) { //If there's only a single device, directly communicate LWT to its state
+    /*if(configDevices.length == 1 ) { //If there's only a single device, directly communicate LWT to its state
         will_topic = GenericDevice.getDeviceOptions(CONFIG.topic, configDevices[0]).baseTopic + 'status'
-    }
+    }*/
 
     mqttClient = mqtt.connect({
         host: CONFIG.host,
@@ -119,7 +119,7 @@ const main = async() => {
         password: CONFIG.mqtt_pass,
         will: {
           topic: will_topic,
-          payload: 'offline',
+          payload: 'offline', //TODO: add publishing this on clean disconnect as well
           qos: CONFIG.qos,
           retain: CONFIG.retain_status_topic
         }
@@ -131,6 +131,7 @@ const main = async() => {
         mqttClient.subscribe(topic)
         mqttClient.subscribe('homeassistant/status')
         mqttClient.subscribe('hass/status')
+	mqttClient.publish(will_topic, 'online', { qos: CONFIG.qos, retain: CONFIG.retain_status_topic });
         initDevices(configDevices, mqttClient)
     })
 
