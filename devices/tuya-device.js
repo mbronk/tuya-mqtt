@@ -151,7 +151,11 @@ class TuyaDevice {
                     } else if (this.config.hasOwnProperty('dpsMode') && this.config.dpsMode == key) {
                         // If color/white mode is changing, force sending color state
                         // Allows overriding saturation value to 0% for white mode for the HSB device topics
-                        this.dps[this.config.dpsColor].updated = true
+                        if(this.config.hasOwnProperty('dpsColor')) {
+				if(this.dps[this.config.dpsColor]){
+					this.dps[this.config.dpsColor].updated = true
+				}
+			}
                     }
                 }
             }

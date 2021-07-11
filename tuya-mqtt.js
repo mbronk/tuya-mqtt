@@ -27,7 +27,12 @@ async function processExit(exitCode) {
     }
     if (exitCode || exitCode === 0) debug('Exit code: '+exitCode)
     await utils.sleep(1)
-    process.exit()
+    if (typeof exitCode != "number") {
+	console.log(exitCode)
+	process.exit(1)
+    } else {
+    	process.exit(exitCode)
+    }
 }
 
 // Get new deivce based on configured type
